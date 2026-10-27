@@ -1,0 +1,88 @@
+// Mobile-only table of contents drawer, opened from the right.
+// Breakpoint matches the explorer plugin (max-width: 800px).
+
+.toc-drawer {
+  display: none;
+}
+
+@media all and (max-width: 800px) {
+  .toc-drawer {
+    display: block;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 100;
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    padding: 4rem 1.5rem 2rem 1.5rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background-color: var(--light);
+    transform: translateX(100vw);
+    visibility: hidden;
+    transition:
+      transform 200ms ease,
+      visibility 200ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  :root[reader-mode="on"] .toc-drawer {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .toc-drawer-title {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.1rem;
+    color: var(--dark);
+  }
+
+  ul.toc-drawer-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    & > li > a {
+      display: block;
+      padding: 0.35rem 0;
+      color: var(--dark);
+      opacity: 0.55;
+      transition:
+        0.5s ease opacity,
+        0.3s ease color;
+
+      &.in-view {
+        opacity: 0.9;
+      }
+    }
+
+    @for $i from 0 through 6 {
+      & .depth-#{$i} {
+        padding-left: calc(1rem * #{$i});
+      }
+    }
+  }
+
+  // On a phone the reader mode button only opens/closes the drawer:
+  // keep the sidebars (and with them the button itself) fully visible...
+  :root[reader-mode="on"] .sidebar.left,
+  :root[reader-mode="on"] .sidebar.right {
+    opacity: 1 !important;
+  }
+
+  // ...and keep the button above the drawer so it can close it again
+  .readermode {
+    z-index: 101;
+  }
+
+  // no page scrolling behind the open drawer
+  :root[reader-mode="on"] body {
+    overflow: hidden;
+  }
+}
