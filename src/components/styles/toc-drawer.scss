@@ -5,6 +5,49 @@
   display: none;
 }
 
+// Copies of the reader mode and explorer buttons (made by the script) that are shown above the
+// open drawer. They exist on every screen size, so their base look and the rule that hides
+// them must not depend on the media query below.
+.toc-drawer-close,
+.toc-drawer-explorer {
+  display: none;
+  position: fixed;
+  z-index: 101;
+  box-sizing: border-box;
+  cursor: pointer;
+  margin: 0;
+  background: none;
+  border: none;
+  text-align: inherit;
+}
+
+// same look as the reader mode button
+.toc-drawer-close {
+  padding: 0;
+
+  & svg {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: calc(50% - 10px);
+    fill: var(--darkgray);
+    stroke: var(--darkgray);
+  }
+}
+
+// same look as the explorer button
+.toc-drawer-explorer {
+  align-items: center;
+  padding: 5px;
+  color: var(--dark);
+
+  & svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--darkgray);
+  }
+}
+
 @media all and (max-width: 800px) {
   .toc-drawer {
     display: block;
@@ -76,9 +119,25 @@
     opacity: 1 !important;
   }
 
-  // ...and keep the button above the drawer so it can close it again
-  .readermode {
-    z-index: 101;
+  :root[reader-mode="on"] .toc-drawer-close {
+    display: block;
+  }
+
+  :root[reader-mode="on"] .toc-drawer-explorer {
+    display: flex;
+  }
+
+  // While the explorer is open (it marks <html> with .mobile-no-scroll) the reader mode
+  // button is hidden, so the two sidebars can't be stacked on top of each other
+  :root.mobile-no-scroll button.readermode {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  :root.mobile-no-scroll .toc-drawer,
+  :root.mobile-no-scroll .toc-drawer-close,
+  :root.mobile-no-scroll .toc-drawer-explorer {
+    display: none !important;
   }
 
   // no page scrolling behind the open drawer
